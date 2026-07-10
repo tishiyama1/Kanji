@@ -1,0 +1,101 @@
+{
+  "grade": 1,
+  "kanji": [
+    {
+      "char": "山",
+      "yomi": ["やま", "サン"],
+      "meaning": "つちが たかく もりあがった ところ。",
+      "examples": ["やま に のぼる", "ふじさん"],
+      "strokes": 3,
+      "hasIllust": true
+    },
+    {
+      "char": "川",
+      "yomi": ["かわ", "セン"],
+      "meaning": "みずが ながれる ところ。",
+      "examples": ["かわ で あそぶ", "おおきな かわ"],
+      "strokes": 3,
+      "hasIllust": true
+    },
+    {
+      "char": "木",
+      "yomi": ["き", "モク"],
+      "meaning": "はや えだが ある しょくぶつ。",
+      "examples": ["おおきな き", "き の え"],
+      "strokes": 4,
+      "hasIllust": true
+    },
+    {
+      "char": "花",
+      "yomi": ["はな", "カ"],
+      "meaning": "しょくぶつが さかせる きれいな もの。",
+      "examples": ["はな が さく", "あかい はな"],
+      "strokes": 7,
+      "hasIllust": true
+    },
+    {
+      "char": "火",
+      "yomi": ["ひ", "カ"],
+      "meaning": "ものが もえるときに でる あかくて あついもの。",
+      "examples": ["ひ を つける", "はなび"],
+      "strokes": 4,
+      "hasIllust": true
+    },
+    {
+      "char": "犬",
+      "yomi": ["いぬ", "ケン"],
+      "meaning": "「わん」と なく、ひとと なかよしの どうぶつ。",
+      "examples": ["いぬ を かう", "こいぬ"],
+      "strokes": 4,
+      "hasIllust": true
+    },
+    {
+      "char": "一",
+      "yomi": ["いち", "ひと"],
+      "meaning": "かずの ひとつ。",
+      "examples": ["いち ねんせい", "ひとつ"],
+      "strokes": 1,
+      "hasIllust": false
+    },
+    {
+      "char": "二",
+      "yomi": ["に", "ふた"],
+      "meaning": "かずの ふたつ。",
+      "examples": ["に かい", "ふたり"],
+      "strokes": 2,
+      "hasIllust": false
+    },
+    {
+      "char": "三",
+      "yomi": ["さん", "みっ"],
+      "meaning": "かずの みっつ。",
+      "examples": ["さん がい", "みっつ"],
+      "strokes": 3,
+      "hasIllust": false
+    },
+    {
+      "char": "大",
+      "yomi": ["おお", "ダイ"],
+      "meaning": "サイズが おおきい こと。",
+      "examples": ["おおきい", "だいすき"],
+      "strokes": 3,
+      "hasIllust": false
+    },
+    {
+      "char": "小",
+      "yomi": ["ちい", "ショウ"],
+      "meaning": "サイズが ちいさい こと。",
+      "examples": ["ちいさい", "しょうがっこう"],
+      "strokes": 3,
+      "hasIllust": false
+    },
+    {
+      "char": "水",
+      "yomi": ["みず", "スイ"],
+      "meaning": "のんだり あらったり する とうめいな えきたい。",
+      "examples": ["みず を のむ", "すいようび"],
+      "strokes": 4,
+      "hasIllust": false
+    }
+  ]
+}
