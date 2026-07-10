@@ -9,6 +9,7 @@ import * as apigw from 'aws-cdk-lib/aws-apigatewayv2'
 import * as integrations from 'aws-cdk-lib/aws-apigatewayv2-integrations'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import * as path from 'node:path'
+import * as fs from 'node:fs'
 
 export class KanjiAppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -77,12 +78,22 @@ export class KanjiAppStack extends cdk.Stack {
     })
 
     // --- Deploy the built SPA (web/dist) to S3 ---
-    new s3deploy.BucketDeployment(this, 'DeploySite', {
-      sources: [s3deploy.Source.asset(path.join(__dirname, '..', '..', 'web', 'dist'))],
-      destinationBucket: siteBucket,
-      distribution,
-      distributionPaths: ['/*'],
-    })
+    // Only when the build output exists. This lets `cdk bootstrap`/`synth`
+    // run without a frontend build (e.g. in CloudShell); CI builds web/dist
+    // before `cdk deploy`, so the real deploy always uploads the site.
+    const distPath = path.join(__dirname, '..', '..', 'web', 'dist')
+    if (fs.existsSync(distPath)) {
+      new s3deploy.BucketDeployment(this, 'DeploySite', {
+        sources: [s3deploy.Source.asset(distPath)],
+        destinationBucket: siteBucket,
+        distribution,
+        distributionPaths: ['/*'],
+      })
+    } else {
+      cdk.Annotations.of(this).addWarning(
+        'web/dist not found — skipping site upload. Run `npm run build` in web/ before deploy.'
+      )
+    }
 
     new cdk.CfnOutput(this, 'SiteUrl', { value: `https://${distribution.distributionDomainName}` })
     new cdk.CfnOutput(this, 'ApiEndpoint', { value: httpApi.apiEndpoint })
