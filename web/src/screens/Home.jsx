@@ -1,27 +1,35 @@
 import { useState } from 'react'
 
 export default function Home({ session, go }) {
-  const [grade, setGrade] = useState(session.grade || 1)
+  const [grade, setGrade] = useState(Math.min(session.grade || 1, 2))
 
   return (
-    <div className="screen scrollable">
-      <h1>なにを する？</h1>
+    <div className="screen scrollable home">
+      <h1>きょうは なにを する？</h1>
 
-      <div className="card">
-        <label>がくねん を えらぶ</label>
-        <select value={grade} onChange={(e) => setGrade(Number(e.target.value))}>
-          {[1, 2].map((g) => <option key={g} value={g}>{g}ねんせい</option>)}
-          {[3, 4, 5, 6].map((g) => <option key={g} value={g} disabled>{g}ねんせい（じゅんびちゅう）</option>)}
-        </select>
+      <div className="grade-pills">
+        {[1, 2, 3, 4, 5, 6].map((g) => (
+          <button
+            key={g}
+            className={'pill' + (g === grade ? ' on' : '')}
+            disabled={g > 2}
+            onClick={() => setGrade(g)}
+          >
+            {g}ねん
+          </button>
+        ))}
       </div>
 
-      <div className="card stack">
-        <h2>クイズ</h2>
-        <button className="big pink" onClick={() => go('quiz', { grade, mode: 'choose' })}>
-          ✏️ えらぶ モード
+      <div className="mode-cards">
+        <button className="mode-card pink" onClick={() => go('quiz', { grade, mode: 'choose' })}>
+          <span className="mc-emoji">✏️</span>
+          <span className="mc-title">えらぶ</span>
+          <span className="mc-sub">よっつの なかから えらぼう</span>
         </button>
-        <button className="big blue" onClick={() => go('quiz', { grade, mode: 'write' })}>
-          🖌️ てがき モード
+        <button className="mode-card blue" onClick={() => go('quiz', { grade, mode: 'write' })}>
+          <span className="mc-emoji">🖌️</span>
+          <span className="mc-title">てがき</span>
+          <span className="mc-sub">ゆびで かんじを かいてみよう</span>
         </button>
       </div>
 
