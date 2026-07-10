@@ -13,11 +13,11 @@ const DAKUTEN = {
 const HANDAKUTEN = { は: 'ぱ', ひ: 'ぴ', ふ: 'ぷ', へ: 'ぺ', ほ: 'ぽ' }
 
 export default function Login({ onLogin }) {
-  const [mode, setMode] = useState('login') // 'login' | 'signup'
+  const [mode, setMode] = useState('login')
   const [name, setName] = useState('')
   const [pin, setPin] = useState('')
   const [grade, setGrade] = useState(1)
-  const [field, setField] = useState('name') // which input the keyboard edits
+  const [field, setField] = useState('name')
   const [error, setError] = useState('')
 
   const addChar = (ch) => { if (name.length < 8) setName(name + ch) }
@@ -45,43 +45,45 @@ export default function Login({ onLogin }) {
   }
 
   return (
-    <div>
-      <h1>かんじ れんしゅう</h1>
-      <div className="card stack">
+    <div className="screen login">
+      <div className="login-top">
+        <h1>かんじ れんしゅう</h1>
         <div className="row">
           <button className={mode === 'login' ? 'pink' : 'ghost'} onClick={() => setMode('login')}>ログイン</button>
           <button className={mode === 'signup' ? 'pink' : 'ghost'} onClick={() => setMode('signup')}>はじめて</button>
         </div>
 
-        <div>
-          <label>なまえ（ひらがな）</label>
-          <div className={'display' + (field === 'name' ? ' active' : '')} onClick={() => setField('name')}>
-            {name || <span className="placeholder">ここを おして いれてね</span>}
+        <div className="login-fields">
+          <div className="field-col" onClick={() => setField('name')}>
+            <label>なまえ</label>
+            <div className={'display' + (field === 'name' ? ' active' : '')}>
+              {name || <span className="placeholder">おして いれてね</span>}
+            </div>
           </div>
+          <div className="field-col pin" onClick={() => setField('pin')}>
+            <label>あんしょうばんごう</label>
+            <div className={'display' + (field === 'pin' ? ' active' : '')}>
+              {pin ? '●'.repeat(pin.length) : <span className="placeholder">4つの すうじ</span>}
+            </div>
+          </div>
+          {mode === 'signup' && (
+            <div className="field-col grade">
+              <label>がくねん</label>
+              <select value={grade} onChange={(e) => setGrade(e.target.value)}>
+                {[1, 2, 3, 4, 5, 6].map((g) => <option key={g} value={g}>{g}ねん</option>)}
+              </select>
+            </div>
+          )}
         </div>
-
-        <div>
-          <label>あんしょうばんごう（4つの すうじ）</label>
-          <div className={'display' + (field === 'pin' ? ' active' : '')} onClick={() => setField('pin')}>
-            {pin ? '●'.repeat(pin.length) : <span className="placeholder">4つの すうじ</span>}
-          </div>
-        </div>
-
-        {mode === 'signup' && (
-          <div>
-            <label>がくねん</label>
-            <select value={grade} onChange={(e) => setGrade(e.target.value)}>
-              {[1, 2, 3, 4, 5, 6].map((g) => <option key={g} value={g}>{g}ねんせい</option>)}
-            </select>
-          </div>
-        )}
-
-        {field === 'name'
-          ? <KanaKeyboard onChar={addChar} onSpecial={special} />
-          : <NumberPad onDigit={addDigit} onBack={() => setPin(pin.slice(0, -1))} />}
 
         {error && <p className="error">{error}</p>}
         <button className="big green" onClick={submit}>{mode === 'signup' ? 'とうろく する' : 'はじめる'}</button>
+      </div>
+
+      <div className="kb-holder">
+        {field === 'name'
+          ? <KanaKeyboard onChar={addChar} onSpecial={special} />
+          : <NumberPad onDigit={addDigit} onBack={() => setPin(pin.slice(0, -1))} />}
       </div>
     </div>
   )

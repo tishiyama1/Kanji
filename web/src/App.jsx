@@ -24,9 +24,9 @@ export default function App() {
   return (
     <div className="app">
       <div className="topbar">
-        <button className="ghost" onClick={() => go('home')}>🏠</button>
+        <button className="ghost sm" onClick={() => go('home')}>🏠</button>
         <span className="name">{session.name} さん</span>
-        <button className="ghost" onClick={logout}>ばいばい</button>
+        <button className="ghost sm" onClick={logout}>ばいばい</button>
       </div>
 
       {view.name === 'home' && <Home session={session} go={go} />}

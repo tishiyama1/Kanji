@@ -1,26 +1,40 @@
 import { useEffect, useRef } from 'react'
 
-// A pointer-drawing canvas that also records strokes as point sequences.
+// A responsive square drawing canvas that records strokes as point sequences.
+// It sizes itself to its parent container, so the layout controls how big it is.
 // - strokesRef.current holds an array of strokes (each an array of [x,y] in CSS px).
 // - onClearRef.current is set to a clear() function.
-export default function HandwritingCanvas({ size = 280, strokesRef, onClearRef, snapshotRef }) {
+// - snapshotRef.current is set to a () => dataURL function.
+export default function HandwritingCanvas({ strokesRef, onClearRef, snapshotRef }) {
   const canvasRef = useRef(null)
   const drawing = useRef(false)
   const last = useRef(null)
   const strokes = useRef([])
   const cur = useRef(null)
+  const cssSize = useRef(0)
 
   useEffect(() => {
     const canvas = canvasRef.current
-    const dpr = window.devicePixelRatio || 1
-    canvas.width = size * dpr
-    canvas.height = size * dpr
     const ctx = canvas.getContext('2d')
-    ctx.scale(dpr, dpr)
-    ctx.lineWidth = 12
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.strokeStyle = '#3a3a3a'
+
+    function setup() {
+      const size = canvas.clientWidth
+      if (!size || size === cssSize.current) return
+      cssSize.current = size
+      const dpr = window.devicePixelRatio || 1
+      canvas.width = size * dpr
+      canvas.height = size * dpr
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.lineWidth = Math.max(8, size * 0.045)
+      ctx.lineCap = 'round'
+      ctx.lineJoin = 'round'
+      ctx.strokeStyle = '#3a3a3a'
+      // resizing resets the buffer, so clear any in-progress drawing
+      strokes.current.length = 0
+    }
+    setup()
+    const ro = new ResizeObserver(setup)
+    ro.observe(canvas)
 
     if (strokesRef) strokesRef.current = strokes.current
 
@@ -55,25 +69,20 @@ export default function HandwritingCanvas({ size = 280, strokesRef, onClearRef, 
 
     if (onClearRef) {
       onClearRef.current = () => {
-        ctx.clearRect(0, 0, size, size)
+        ctx.clearRect(0, 0, cssSize.current, cssSize.current)
         strokes.current.length = 0
       }
     }
-    if (snapshotRef) {
-      // PNG of what the child drew (transparent background, dark strokes)
-      snapshotRef.current = () => canvas.toDataURL('image/png')
-    }
+    if (snapshotRef) snapshotRef.current = () => canvas.toDataURL('image/png')
+
     return () => {
+      ro.disconnect()
       canvas.removeEventListener('pointerdown', start)
       canvas.removeEventListener('pointermove', move)
       canvas.removeEventListener('pointerup', end)
       canvas.removeEventListener('pointercancel', end)
     }
-  }, [size, strokesRef, onClearRef, snapshotRef])
+  }, [strokesRef, onClearRef, snapshotRef])
 
-  return (
-    <div className="canvas-wrap">
-      <canvas ref={canvasRef} style={{ width: size, height: size }} />
-    </div>
-  )
+  return <canvas ref={canvasRef} className="hw-canvas" />
 }

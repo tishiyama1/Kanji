@@ -20,7 +20,7 @@ export default function Dictionary({ session, grade, go }) {
   )
 
   return (
-    <div>
+    <div className="screen scrollable">
       <h1>📖 かんじ じてん</h1>
       <div className="card">
         <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="かんじ か よみ で さがす" />
