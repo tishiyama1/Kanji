@@ -96,7 +96,8 @@ export default function Quiz({ session, grade, mode, go }) {
   return (
     <div className="screen quiz">
       <div className="quiz-status">
-        <span>{mode === 'choose' ? '✏️ えらぶ' : '🖌️ てがき'}・{score.correct}／{score.done}もん</span>
+        <span className="chip">{mode === 'choose' ? '✏️ えらぶ' : '🖌️ てがき'}</span>
+        <span className="chip">⭐ {score.correct}／{score.done}もん</span>
         <button className="ghost sm" onClick={() => go('home')}>やめる</button>
       </div>
 
