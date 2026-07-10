@@ -46,7 +46,7 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="screen login">
-      <div className="login-top">
+      <div className="login-top card">
         <div className="login-head">
           <h1>🖍️ かんじ れんしゅう</h1>
           <div className="mode-toggle">
@@ -63,9 +63,9 @@ export default function Login({ onLogin }) {
             </div>
           </div>
           <div className="field-col pin" onClick={() => setField('pin')}>
-            <label>あんしょうばんごう</label>
+            <label>ばんごう</label>
             <div className={'display' + (field === 'pin' ? ' active' : '')}>
-              {pin ? '●'.repeat(pin.length) : <span className="placeholder">4つの すうじ</span>}
+              {pin ? '●'.repeat(pin.length) : <span className="placeholder">すうじを 4つ</span>}
             </div>
           </div>
           {mode === 'signup' && (
@@ -84,7 +84,7 @@ export default function Login({ onLogin }) {
         {error && <p className="error">{error}</p>}
       </div>
 
-      <div className="kb-holder">
+      <div className="kb-holder kb-tray">
         {field === 'name'
           ? <KanaKeyboard onChar={addChar} onSpecial={special} />
           : <NumberPad onDigit={addDigit} onBack={() => setPin(pin.slice(0, -1))} />}

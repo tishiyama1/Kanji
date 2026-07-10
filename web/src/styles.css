@@ -165,9 +165,9 @@ input[type="text"], input[type="tel"], select {
 }
 label { font-weight: 900; display: block; margin-bottom: 4px; font-size: 13px; color: var(--muted); letter-spacing: 1px; }
 
-/* ---------- login (fields on top, keyboard pinned below) ---------- */
-.login { gap: 10px; }
-.login-top { flex: 0 0 auto; display: flex; flex-direction: column; gap: 8px; }
+/* ---------- login (fields on a card, keyboard on a tray below) ---------- */
+.login { gap: clamp(12px, 2.4vmin, 22px); }
+.login-top { flex: 0 0 auto; display: flex; flex-direction: column; gap: 10px; }
 .login-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .login-head h1 { margin: 0; text-align: left; }
 .mode-toggle { display: flex; gap: 6px; }
@@ -178,23 +178,31 @@ label { font-weight: 900; display: block; margin-bottom: 4px; font-size: 13px; c
 .field-col.go { flex: 1 1 120px; }
 .submit { width: 100%; padding: 13px 10px; white-space: nowrap; }
 .display {
-  min-height: 50px;
+  min-height: clamp(58px, 9vmin, 72px);
   border: 3px solid var(--card-edge);
-  border-radius: 14px;
-  background: #fff;
-  font-size: 22px;
+  border-radius: 16px;
+  background: #fdfaf4;
+  font-size: clamp(26px, 5vmin, 32px);
   font-weight: 900;
-  padding: 10px 14px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
-  letter-spacing: 4px;
+  letter-spacing: 5px;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
-.display.active { border-color: var(--pink); box-shadow: 0 0 0 4px var(--pink-tint); }
-.display .placeholder { color: #cbb9a5; font-size: 14px; font-weight: 700; letter-spacing: normal; }
+.display.active { border-color: var(--pink); box-shadow: 0 0 0 4px var(--pink-tint); background: #fff; }
+.display .placeholder { color: #cbb9a5; font-size: 15px; font-weight: 700; letter-spacing: normal; }
+.login label { font-size: 15px; color: var(--ink); }
 
 .kb-holder { flex: 1 1 auto; min-height: 0; display: flex; align-items: flex-end; }
 .kb-holder > * { max-height: min(100%, 440px); }
+/* visually separates the keyboard from the input card */
+.kb-tray {
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px solid var(--card-edge);
+  border-radius: var(--r-lg);
+  padding: clamp(8px, 1.6vmin, 14px);
+}
 /* Switch-style gojūon grid: 10 kana columns (left→right) + function column */
 .kb {
   flex: 1;
