@@ -25,7 +25,7 @@ export default function Progress({ session, go }) {
   if (!rows) return <div className="card center">よみこみちゅう…</div>
 
   return (
-    <div>
+    <div className="screen scrollable">
       <h1>⭐ せいせき</h1>
       <div className="card">
         <h2>{session.name} さん</h2>

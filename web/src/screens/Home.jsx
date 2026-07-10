@@ -4,7 +4,7 @@ export default function Home({ session, go }) {
   const [grade, setGrade] = useState(session.grade || 1)
 
   return (
-    <div>
+    <div className="screen scrollable">
       <h1>なにを する？</h1>
 
       <div className="card">
