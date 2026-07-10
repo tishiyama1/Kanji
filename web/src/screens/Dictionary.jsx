@@ -10,8 +10,8 @@ export default function Dictionary({ session, grade, go }) {
 
   useEffect(() => {
     loadGrade(grade).then(setEntries)
-    setProgress(api.getProgress(session.userId))
-  }, [grade, session.userId])
+    api.getProgress(session).then(setProgress).catch(() => setProgress({}))
+  }, [grade, session])
 
   if (!entries) return <div className="card center">よみこみちゅう…</div>
 

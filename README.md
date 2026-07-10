@@ -41,5 +41,6 @@ AWS へのデプロイ手順は `infra/README.md` を参照。
 | フロント（認証・クイズ・辞書・成績） | ✅ 動作確認ずみ |
 | 1年生イラスト（山川木花火犬） | ✅ 6字 |
 | 1〜2年生の残りイラスト | ⏳ 同画風で追加予定 |
-| AWS バックエンド + IaC | ✅ コード用意（要デプロイ） |
-| フロント↔AWS API 接続 | ⏳ `api.js` を fetch 実装に差し替え |
+| AWS バックエンド + IaC | ✅ コード用意（CDK synth 確認ずみ・要デプロイ） |
+| フロント↔AWS API 接続 | ✅ 本番は `/api` を呼ぶ（開発は localStorage） |
+| CI/CD（GitHub Actions） | ✅ main push で自動デプロイ（要 OIDC/シークレット設定） |

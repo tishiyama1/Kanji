@@ -1,0 +1,61 @@
+name: Deploy
+
+# Deploys the app to AWS on every push to main (and on manual dispatch).
+# The CDK stack builds the S3 bucket, CloudFront, API Gateway, Lambda and
+# DynamoDB, and also uploads web/dist and invalidates the CloudFront cache.
+#
+# Required GitHub configuration (Settings -> Secrets and variables -> Actions):
+#   Secrets:
+#     AWS_DEPLOY_ROLE_ARN  IAM role ARN that GitHub OIDC assumes (see infra/README.md)
+#     JWT_SECRET           long random string used to sign auth tokens
+#   Variables (optional):
+#     AWS_REGION           defaults to ap-northeast-1
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write   # required for OIDC
+  contents: read
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build frontend
+        working-directory: web
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install infra deps
+        working-directory: infra
+        run: npm ci
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'ap-northeast-1' }}
+
+      - name: CDK deploy
+        working-directory: infra
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: npx cdk deploy --require-approval never --outputs-file cdk-outputs.json
+
+      - name: Show outputs
+        working-directory: infra
+        run: cat cdk-outputs.json

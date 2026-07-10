@@ -61,7 +61,7 @@ export default function Quiz({ session, grade, mode, go }) {
   }
 
   function record(correct) {
-    api.recordAnswer(session.userId, q.target.char, correct)
+    api.recordAnswer(session, q.target.char, correct).catch(() => {})
     setScore((s) => ({ done: s.done + 1, correct: s.correct + (correct ? 1 : 0) }))
   }
 
