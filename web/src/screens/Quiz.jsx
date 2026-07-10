@@ -16,14 +16,32 @@ function EmphWord({ word, reading }) {
   )
 }
 
-function sample(arr, n, exclude) {
-  const pool = arr.filter((x) => x !== exclude)
-  const out = []
-  while (out.length < n && pool.length) {
-    out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0])
-  }
-  return out
+// How confusable is candidate `c` with the target `t`?
+// Higher = looks or sounds more alike -> a better (trickier) distractor.
+function confusability(t, c) {
+  let s = 0
+  // shape: shared components / radicals
+  const tp = new Set(t.parts || [])
+  for (const p of c.parts || []) if (tp.has(p)) s += 3
+  // sound: shared kana across all readings, plus same opening sound
+  const tk = new Set((t.yomi || []).join(''))
+  for (const ch of new Set((c.yomi || []).join(''))) if (tk.has(ch)) s += 1
+  if (t.yomi?.[0]?.[0] && t.yomi[0][0] === c.yomi?.[0]?.[0]) s += 2
+  // close stroke count feels similar too (small nudge)
+  if (Math.abs((t.strokes || 0) - (c.strokes || 0)) <= 1) s += 1
+  return s
 }
+
+// Pick n distractors biased toward look-alikes / sound-alikes, with enough
+// randomness that the same options don't repeat every time.
+function pickDistractors(all, target, n) {
+  const scored = all
+    .filter((e) => e.char !== target.char)
+    .map((e) => ({ char: e.char, score: confusability(target, e) + Math.random() * 2 }))
+    .sort((a, b) => b.score - a.score)
+  return scored.slice(0, n).map((x) => x.char)
+}
+
 function shuffle(arr) {
   const a = [...arr]
   for (let i = a.length - 1; i > 0; i--) {
@@ -76,7 +94,7 @@ export default function Quiz({ session, grade, mode, go }) {
     if (deck.length === 0) { setPhase('complete'); return }
     const target = deck.pop()
     lastCharRef.current = target.char
-    const distractors = sample(all.map((e) => e.char), 3, target.char)
+    const distractors = pickDistractors(all, target, 3)
     const choices = shuffle([target.char, ...distractors])
     setQ({ target, choices })
     setResult(null)
