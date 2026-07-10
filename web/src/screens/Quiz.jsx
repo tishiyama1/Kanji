@@ -28,10 +28,12 @@ export default function Quiz({ session, grade, mode, go }) {
   const [phase, setPhase] = useState('question') // question | reveal | done
   const [result, setResult] = useState(null) // { correct, picked } (choose)
   const [scoreRes, setScoreRes] = useState(null) // scoring result (write)
+  const [drawnImg, setDrawnImg] = useState(null) // PNG of the child's drawing
   const [score, setScore] = useState({ done: 0, correct: 0 })
   const [err, setErr] = useState('')
   const clearRef = useRef(null)
   const strokesRef = useRef([])
+  const snapshotRef = useRef(null)
 
   useEffect(() => {
     loadGrade(grade).then(setEntries).catch((e) => setErr(e.message))
@@ -76,6 +78,7 @@ export default function Quiz({ session, grade, mode, go }) {
     const ref = refStrokes[q.target.char]
     const res = scoreHandwriting(strokesRef.current, ref)
     if (import.meta.env.DEV) console.log('score', q.target.char, res)
+    setDrawnImg(snapshotRef.current ? snapshotRef.current() : null)
     setScoreRes(res)
     setPhase('reveal')
   }
@@ -127,7 +130,7 @@ export default function Quiz({ session, grade, mode, go }) {
         {mode === 'write' && phase === 'question' && (
           <div className="stack">
             <p className="hint">この よみの かんじを かいてみよう</p>
-            <HandwritingCanvas strokesRef={strokesRef} onClearRef={clearRef} />
+            <HandwritingCanvas strokesRef={strokesRef} onClearRef={clearRef} snapshotRef={snapshotRef} />
             <div className="row">
               <button className="ghost" onClick={() => clearRef.current && clearRef.current()}>けす</button>
               <button className="blue" onClick={checkWriting}>こたえあわせ</button>
@@ -140,8 +143,18 @@ export default function Quiz({ session, grade, mode, go }) {
           <div className="stack">
             <div className="big-emoji">{GRADE_LABEL[scoreRes.grade].emoji}</div>
             <p className="center reading">{GRADE_LABEL[scoreRes.grade].text}</p>
-            <p className="hint">おてほん</p>
-            <div className="answer-key">{t.char}</div>
+            <div className="compare">
+              <div>
+                <p className="hint">かいた じ</p>
+                <div className="compare-box">
+                  {drawnImg && <img src={drawnImg} alt="かいた じ" />}
+                </div>
+              </div>
+              <div>
+                <p className="hint">おてほん</p>
+                <div className="compare-box answer-key">{t.char}</div>
+              </div>
+            </div>
             <p className="center reading">{t.yomi.join('・')}</p>
             <p className="center">{t.meaning}</p>
             <button className={'big ' + GRADE_LABEL[scoreRes.grade].cls} onClick={() => finishWrite(scoreRes.correct)}>

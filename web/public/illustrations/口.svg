@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="くち">
+  <rect width="200" height="200" rx="24" fill="#FFF6E9"/>
+  <path d="M48 78 Q100 66 152 78 Q128 150 100 150 Q72 150 48 78 Z" fill="#E86A6A"/>
+  <path d="M48 78 Q100 66 152 78 Q100 92 48 78 Z" fill="#FFFFFF"/>
+  <path d="M92 120 Q100 148 108 120 Q100 112 92 120 Z" fill="#F7A0A0"/>
+</svg>

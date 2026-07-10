@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 // A pointer-drawing canvas that also records strokes as point sequences.
 // - strokesRef.current holds an array of strokes (each an array of [x,y] in CSS px).
 // - onClearRef.current is set to a clear() function.
-export default function HandwritingCanvas({ size = 280, strokesRef, onClearRef }) {
+export default function HandwritingCanvas({ size = 280, strokesRef, onClearRef, snapshotRef }) {
   const canvasRef = useRef(null)
   const drawing = useRef(false)
   const last = useRef(null)
@@ -59,13 +59,17 @@ export default function HandwritingCanvas({ size = 280, strokesRef, onClearRef }
         strokes.current.length = 0
       }
     }
+    if (snapshotRef) {
+      // PNG of what the child drew (transparent background, dark strokes)
+      snapshotRef.current = () => canvas.toDataURL('image/png')
+    }
     return () => {
       canvas.removeEventListener('pointerdown', start)
       canvas.removeEventListener('pointermove', move)
       canvas.removeEventListener('pointerup', end)
       canvas.removeEventListener('pointercancel', end)
     }
-  }, [size, strokesRef, onClearRef])
+  }, [size, strokesRef, onClearRef, snapshotRef])
 
   return (
     <div className="canvas-wrap">

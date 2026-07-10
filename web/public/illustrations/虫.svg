@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="むし">
+  <rect width="200" height="200" rx="24" fill="#FFF6E9"/>
+  <g stroke="#3A3A3A" stroke-width="5" stroke-linecap="round">
+    <line x1="60" y1="120" x2="34" y2="132"/><line x1="60" y1="100" x2="32" y2="100"/>
+    <line x1="140" y1="120" x2="166" y2="132"/><line x1="140" y1="100" x2="168" y2="100"/>
+    <line x1="88" y1="58" x2="78" y2="38"/><line x1="112" y1="58" x2="122" y2="38"/>
+  </g>
+  <circle cx="100" cy="62" r="22" fill="#3A3A3A"/>
+  <ellipse cx="100" cy="116" rx="46" ry="52" fill="#E8503C"/>
+  <line x1="100" y1="70" x2="100" y2="164" stroke="#3A3A3A" stroke-width="5"/>
+  <g fill="#3A3A3A"><circle cx="78" cy="104" r="9"/><circle cx="122" cy="104" r="9"/><circle cx="80" cy="140" r="8"/><circle cx="120" cy="140" r="8"/></g>
+</svg>
