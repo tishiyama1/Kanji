@@ -1,10 +1,14 @@
 import { useEffect, useRef } from 'react'
 
-// A simple pointer-drawing canvas. Exposes a clear() via ref-like prop.
-export default function HandwritingCanvas({ size = 280, onClearRef }) {
+// A pointer-drawing canvas that also records strokes as point sequences.
+// - strokesRef.current holds an array of strokes (each an array of [x,y] in CSS px).
+// - onClearRef.current is set to a clear() function.
+export default function HandwritingCanvas({ size = 280, strokesRef, onClearRef }) {
   const canvasRef = useRef(null)
   const drawing = useRef(false)
   const last = useRef(null)
+  const strokes = useRef([])
+  const cur = useRef(null)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -18,25 +22,31 @@ export default function HandwritingCanvas({ size = 280, onClearRef }) {
     ctx.lineJoin = 'round'
     ctx.strokeStyle = '#3a3a3a'
 
+    if (strokesRef) strokesRef.current = strokes.current
+
     const pos = (e) => {
       const r = canvas.getBoundingClientRect()
-      return { x: e.clientX - r.left, y: e.clientY - r.top }
+      return [e.clientX - r.left, e.clientY - r.top]
     }
     const start = (e) => {
       drawing.current = true
-      last.current = pos(e)
+      const p = pos(e)
+      last.current = p
+      cur.current = [p]
+      strokes.current.push(cur.current)
       canvas.setPointerCapture(e.pointerId)
     }
     const move = (e) => {
       if (!drawing.current) return
       const p = pos(e)
       ctx.beginPath()
-      ctx.moveTo(last.current.x, last.current.y)
-      ctx.lineTo(p.x, p.y)
+      ctx.moveTo(last.current[0], last.current[1])
+      ctx.lineTo(p[0], p[1])
       ctx.stroke()
       last.current = p
+      cur.current.push(p)
     }
-    const end = () => { drawing.current = false }
+    const end = () => { drawing.current = false; cur.current = null }
 
     canvas.addEventListener('pointerdown', start)
     canvas.addEventListener('pointermove', move)
@@ -44,7 +54,10 @@ export default function HandwritingCanvas({ size = 280, onClearRef }) {
     canvas.addEventListener('pointercancel', end)
 
     if (onClearRef) {
-      onClearRef.current = () => ctx.clearRect(0, 0, size, size)
+      onClearRef.current = () => {
+        ctx.clearRect(0, 0, size, size)
+        strokes.current.length = 0
+      }
     }
     return () => {
       canvas.removeEventListener('pointerdown', start)
@@ -52,7 +65,7 @@ export default function HandwritingCanvas({ size = 280, onClearRef }) {
       canvas.removeEventListener('pointerup', end)
       canvas.removeEventListener('pointercancel', end)
     }
-  }, [size, onClearRef])
+  }, [size, strokesRef, onClearRef])
 
   return (
     <div className="canvas-wrap">

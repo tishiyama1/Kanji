@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as api from '../api.js'
-import { loadGrade, illustUrl, promptReading } from '../data.js'
+import { loadGrade, loadStrokes, illustUrl, promptReading } from '../data.js'
+import { scoreHandwriting, GRADE_LABEL } from '../scoring.js'
 import HandwritingCanvas from '../components/HandwritingCanvas.jsx'
 
 function sample(arr, n, exclude) {
@@ -22,16 +23,20 @@ function shuffle(arr) {
 
 export default function Quiz({ session, grade, mode, go }) {
   const [entries, setEntries] = useState(null)
+  const [refStrokes, setRefStrokes] = useState({})
   const [q, setQ] = useState(null) // { target, choices }
   const [phase, setPhase] = useState('question') // question | reveal | done
-  const [result, setResult] = useState(null) // { correct, picked }
+  const [result, setResult] = useState(null) // { correct, picked } (choose)
+  const [scoreRes, setScoreRes] = useState(null) // scoring result (write)
   const [score, setScore] = useState({ done: 0, correct: 0 })
   const [err, setErr] = useState('')
   const clearRef = useRef(null)
+  const strokesRef = useRef([])
 
   useEffect(() => {
     loadGrade(grade).then(setEntries).catch((e) => setErr(e.message))
-  }, [grade])
+    if (mode === 'write') loadStrokes(grade).then(setRefStrokes).catch(() => {})
+  }, [grade, mode])
 
   useEffect(() => {
     if (entries) nextQuestion(entries)
@@ -48,15 +53,37 @@ export default function Quiz({ session, grade, mode, go }) {
     const choices = shuffle([target.char, ...distractors])
     setQ({ target, choices })
     setResult(null)
+    setScoreRes(null)
     setPhase('question')
     if (clearRef.current) clearRef.current()
   }
 
-  function finish(correct, picked = null) {
+  function record(correct) {
     api.recordAnswer(session.userId, q.target.char, correct)
-    setResult({ correct, picked })
     setScore((s) => ({ done: s.done + 1, correct: s.correct + (correct ? 1 : 0) }))
+  }
+
+  // choose mode: record immediately and show the answer
+  function pick(picked) {
+    const correct = picked === q.target.char
+    record(correct)
+    setResult({ correct, picked })
     setPhase('done')
+  }
+
+  // write mode: grade the handwriting, then reveal
+  function checkWriting() {
+    const ref = refStrokes[q.target.char]
+    const res = scoreHandwriting(strokesRef.current, ref)
+    if (import.meta.env.DEV) console.log('score', q.target.char, res)
+    setScoreRes(res)
+    setPhase('reveal')
+  }
+
+  // reveal buttons record the (possibly overridden) result and advance
+  function finishWrite(correct) {
+    record(correct)
+    nextQuestion(entries)
   }
 
   if (err) return <div className="card"><p className="error">{err}</p><button onClick={() => go('home')}>もどる</button></div>
@@ -73,41 +100,19 @@ export default function Quiz({ session, grade, mode, go }) {
       <div className="card">
         <img className="illust" src={illustUrl(t.char)} alt={promptReading(t)} />
         <p className="reading">{promptReading(t)}</p>
-        <p className="hint">この よみの かんじは？</p>
 
         {/* CHOOSE MODE */}
-        {mode === 'choose' && phase !== 'done' && (
-          <div className="choices">
-            {q.choices.map((c) => (
-              <button key={c} className="choice" onClick={() => finish(c === t.char, c)}>{c}</button>
-            ))}
-          </div>
-        )}
-
-        {/* WRITE MODE */}
-        {mode === 'write' && phase === 'question' && (
-          <div className="stack">
-            <HandwritingCanvas onClearRef={clearRef} />
-            <div className="row">
-              <button className="ghost" onClick={() => clearRef.current && clearRef.current()}>けす</button>
-              <button className="blue" onClick={() => setPhase('reveal')}>みほんを みる</button>
+        {mode === 'choose' && phase === 'question' && (
+          <>
+            <p className="hint">この よみの かんじは？</p>
+            <div className="choices">
+              {q.choices.map((c) => (
+                <button key={c} className="choice" onClick={() => pick(c)}>{c}</button>
+              ))}
             </div>
-          </div>
+          </>
         )}
-        {mode === 'write' && phase === 'reveal' && (
-          <div className="stack">
-            <p className="hint">おてほん と くらべてみよう</p>
-            <div className="answer-key">{t.char}</div>
-            <p className="center">おなじように かけたかな？</p>
-            <div className="row">
-              <button className="green" onClick={() => finish(true)}>かけた！</button>
-              <button className="ghost" onClick={() => finish(false)}>もういちど</button>
-            </div>
-          </div>
-        )}
-
-        {/* RESULT */}
-        {phase === 'done' && (
+        {mode === 'choose' && phase === 'done' && (
           <div className="stack">
             <div className="big-emoji">{result.correct ? '🎉' : '💪'}</div>
             <div className="answer-key">{t.char}</div>
@@ -115,6 +120,36 @@ export default function Quiz({ session, grade, mode, go }) {
             <p className="center">{t.meaning}</p>
             <ul>{t.examples.map((ex, i) => <li key={i}>{ex}</li>)}</ul>
             <button className="big pink" onClick={() => nextQuestion(entries)}>つぎ へ ▶</button>
+          </div>
+        )}
+
+        {/* WRITE MODE — question */}
+        {mode === 'write' && phase === 'question' && (
+          <div className="stack">
+            <p className="hint">この よみの かんじを かいてみよう</p>
+            <HandwritingCanvas strokesRef={strokesRef} onClearRef={clearRef} />
+            <div className="row">
+              <button className="ghost" onClick={() => clearRef.current && clearRef.current()}>けす</button>
+              <button className="blue" onClick={checkWriting}>こたえあわせ</button>
+            </div>
+          </div>
+        )}
+
+        {/* WRITE MODE — reveal (auto graded) */}
+        {mode === 'write' && phase === 'reveal' && scoreRes && (
+          <div className="stack">
+            <div className="big-emoji">{GRADE_LABEL[scoreRes.grade].emoji}</div>
+            <p className="center reading">{GRADE_LABEL[scoreRes.grade].text}</p>
+            <p className="hint">おてほん</p>
+            <div className="answer-key">{t.char}</div>
+            <p className="center reading">{t.yomi.join('・')}</p>
+            <p className="center">{t.meaning}</p>
+            <button className={'big ' + GRADE_LABEL[scoreRes.grade].cls} onClick={() => finishWrite(scoreRes.correct)}>
+              つぎ へ ▶
+            </button>
+            <button className="ghost" onClick={() => finishWrite(!scoreRes.correct)}>
+              {scoreRes.correct ? 'う〜ん ちがったかも' : 'かけてた！ せいかいにする'}
+            </button>
           </div>
         )}
       </div>

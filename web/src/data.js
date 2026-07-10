@@ -18,3 +18,13 @@ export function illustUrl(char) {
 export function promptReading(entry) {
   return entry.yomi[0]
 }
+
+// KanjiVG reference strokes (normalized 0..1), used by the handwriting scorer.
+const strokeCache = {}
+export async function loadStrokes(grade) {
+  if (strokeCache[grade]) return strokeCache[grade]
+  const res = await fetch(`${import.meta.env.BASE_URL}data/strokes-grade-${grade}.json`)
+  const json = res.ok ? await res.json() : {}
+  strokeCache[grade] = json
+  return json
+}
