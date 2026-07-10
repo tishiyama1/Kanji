@@ -1,10 +1,10 @@
 {
   "grade": 2,
   "kanji": [
-    { "char": "空", "yomi": ["そら", "クウ"], "meaning": "あたまの うえに ひろがる ところ。", "examples": ["あおい そら", "くうき"], "strokes": 8, "hasIllust": false },
-    { "char": "海", "yomi": ["うみ", "カイ"], "meaning": "しおみずが ある とても おおきな みず。", "examples": ["うみ で およぐ", "かいすいよく"], "strokes": 9, "hasIllust": false },
-    { "char": "星", "yomi": ["ほし", "セイ"], "meaning": "よぞらで ひかる ちいさな ひかり。", "examples": ["ほし が ひかる", "せいざ"], "strokes": 9, "hasIllust": false },
-    { "char": "魚", "yomi": ["さかな", "ギョ"], "meaning": "みずの なかを およぐ いきもの。", "examples": ["さかな を たべる", "きんぎょ"], "strokes": 11, "hasIllust": false },
-    { "char": "鳥", "yomi": ["とり", "チョウ"], "meaning": "そらを とぶ はねの ある いきもの。", "examples": ["とり が とぶ", "ことり"], "strokes": 11, "hasIllust": false }
+    { "char": "空", "yomi": ["そら", "クウ"], "word": "あおいそら", "meaning": "あたまの うえに ひろがる ところ。", "examples": ["あおい そら", "くうき"], "strokes": 8, "hasIllust": false },
+    { "char": "海", "yomi": ["うみ", "カイ"], "word": "うみべ", "meaning": "しおみずが ある とても おおきな みず。", "examples": ["うみ で およぐ", "かいすいよく"], "strokes": 9, "hasIllust": false },
+    { "char": "星", "yomi": ["ほし", "セイ"], "word": "ほしぞら", "meaning": "よぞらで ひかる ちいさな ひかり。", "examples": ["ほし が ひかる", "せいざ"], "strokes": 9, "hasIllust": false },
+    { "char": "魚", "yomi": ["さかな", "ギョ"], "word": "さかなつり", "meaning": "みずの なかを およぐ いきもの。", "examples": ["さかな を たべる", "きんぎょ"], "strokes": 11, "hasIllust": false },
+    { "char": "鳥", "yomi": ["とり", "チョウ"], "word": "ことり", "meaning": "そらを とぶ はねの ある いきもの。", "examples": ["とり が とぶ", "ことり"], "strokes": 11, "hasIllust": false }
   ]
 }

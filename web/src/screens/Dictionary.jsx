@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import * as api from '../api.js'
-import { loadGrade } from '../data.js'
+import { loadGrade, illustUrl } from '../data.js'
 
 export default function Dictionary({ session, grade, go }) {
   const [entries, setEntries] = useState(null)
   const [progress, setProgress] = useState({})
-  const [open, setOpen] = useState(null)
+  const [open, setOpen] = useState(null) // the entry shown in the popup
   const [query, setQuery] = useState('')
 
   useEffect(() => {
@@ -26,32 +26,40 @@ export default function Dictionary({ session, grade, go }) {
         <input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="かんじ か よみ で さがす" />
       </div>
 
-      {filtered.map((e) => {
-        const p = progress[e.char]
-        const isOpen = open === e.char
-        return (
-          <div className="card" key={e.char}>
-            <div className="dict-item" onClick={() => setOpen(isOpen ? null : e.char)}>
-              <div className="k">{e.char}</div>
-              <div className="meta">
-                <div className="yomi">{e.yomi.join('・')}</div>
-                <div>{e.meaning}</div>
-              </div>
-              <div className="badge">せいかい {p ? p.corrects : 0}かい</div>
-            </div>
-            {isOpen && (
-              <div style={{ marginTop: 12 }}>
-                <p>かくすう：{e.strokes}かく</p>
-                <p>ちょうせん：{p ? p.attempts : 0}かい / せいかい：{p ? p.corrects : 0}かい</p>
-                <p>れいぶん：</p>
-                <ul>{e.examples.map((ex, i) => <li key={i}>{ex}</li>)}</ul>
-              </div>
-            )}
-          </div>
-        )
-      })}
+      <div className="dict-grid">
+        {filtered.map((e) => (
+          <button className="dict-tile" key={e.char} onClick={() => setOpen(e)}>
+            <span className="k">{e.char}</span>
+            <span className="y">{e.yomi[0]}</span>
+          </button>
+        ))}
+      </div>
 
       <button className="ghost" onClick={() => go('home')}>もどる</button>
+
+      {open && <KanjiPopup entry={open} progress={progress[open.char]} onClose={() => setOpen(null)} />}
+    </div>
+  )
+}
+
+function KanjiPopup({ entry, progress, onClose }) {
+  const p = progress || { attempts: 0, corrects: 0 }
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal card" onClick={(e) => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose}>×</button>
+        {entry.hasIllust && <img className="illust" src={illustUrl(entry.char)} alt={entry.yomi[0]} />}
+        <div className="answer-key">{entry.char}</div>
+        <p className="center reading">{entry.yomi.join('・')}</p>
+        <p className="center">{entry.meaning}</p>
+        <p className="center">かくすう：{entry.strokes}かく</p>
+        <p className="center">
+          <span className="badge">せいかい {p.corrects}かい</span>{' '}
+          <span className="badge">ちょうせん {p.attempts}かい</span>
+        </p>
+        <p className="hint" style={{ marginBottom: 4 }}>れいぶん</p>
+        <ul>{entry.examples.map((ex, i) => <li key={i}>{ex}</li>)}</ul>
+      </div>
     </div>
   )
 }

@@ -4,6 +4,18 @@ import { loadGrade, loadStrokes, illustUrl, promptReading } from '../data.js'
 import { scoreHandwriting, GRADE_LABEL } from '../scoring.js'
 import HandwritingCanvas from '../components/HandwritingCanvas.jsx'
 
+// Show the example word with the kanji's reading emphasized.
+function EmphWord({ word, reading }) {
+  if (!word) return <p className="reading">{reading}</p>
+  const i = word.indexOf(reading)
+  if (i < 0) return <p className="word">{word}</p>
+  return (
+    <p className="word">
+      {word.slice(0, i)}<span className="emph">{reading}</span>{word.slice(i + reading.length)}
+    </p>
+  )
+}
+
 function sample(arr, n, exclude) {
   const pool = arr.filter((x) => x !== exclude)
   const out = []
@@ -102,12 +114,12 @@ export default function Quiz({ session, grade, mode, go }) {
 
       <div className="card">
         <img className="illust" src={illustUrl(t.char)} alt={promptReading(t)} />
-        <p className="reading">{promptReading(t)}</p>
+        {phase === 'question' && <EmphWord word={t.word} reading={promptReading(t)} />}
 
         {/* CHOOSE MODE */}
         {mode === 'choose' && phase === 'question' && (
           <>
-            <p className="hint">この よみの かんじは？</p>
+            <p className="hint">いろの ところの かんじは？</p>
             <div className="choices">
               {q.choices.map((c) => (
                 <button key={c} className="choice" onClick={() => pick(c)}>{c}</button>
@@ -129,7 +141,7 @@ export default function Quiz({ session, grade, mode, go }) {
         {/* WRITE MODE — question */}
         {mode === 'write' && phase === 'question' && (
           <div className="stack">
-            <p className="hint">この よみの かんじを かいてみよう</p>
+            <p className="hint">いろの ところの かんじを かいてみよう</p>
             <HandwritingCanvas strokesRef={strokesRef} onClearRef={clearRef} snapshotRef={snapshotRef} />
             <div className="row">
               <button className="ghost" onClick={() => clearRef.current && clearRef.current()}>けす</button>
