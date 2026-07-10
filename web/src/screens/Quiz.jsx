@@ -37,7 +37,7 @@ export default function Quiz({ session, grade, mode, go }) {
   const [entries, setEntries] = useState(null)
   const [refStrokes, setRefStrokes] = useState({})
   const [q, setQ] = useState(null)
-  const [phase, setPhase] = useState('question') // question | reveal | done
+  const [phase, setPhase] = useState('question') // question | reveal | done | complete
   const [result, setResult] = useState(null)
   const [scoreRes, setScoreRes] = useState(null)
   const [drawnImg, setDrawnImg] = useState(null)
@@ -46,6 +46,8 @@ export default function Quiz({ session, grade, mode, go }) {
   const clearRef = useRef(null)
   const strokesRef = useRef([])
   const snapshotRef = useRef(null)
+  const deckRef = useRef([])       // shuffled once per round: no repeats
+  const lastCharRef = useRef(null) // avoid同じ字の連続 (across rounds)
 
   useEffect(() => {
     loadGrade(grade).then(setEntries).catch((e) => setErr(e.message))
@@ -53,13 +55,27 @@ export default function Quiz({ session, grade, mode, go }) {
   }, [grade, mode])
 
   useEffect(() => {
-    if (entries) nextQuestion(entries)
+    if (entries) startRound(entries)
   }, [entries])
 
-  function nextQuestion(all) {
+  function startRound(all) {
     const targets = all.filter((e) => e.hasIllust)
     if (targets.length === 0) { setErr('この がくねんは いま じゅんびちゅうです'); return }
-    const target = targets[Math.floor(Math.random() * targets.length)]
+    const deck = shuffle(targets)
+    // don't let the new round open with the kanji we just saw
+    if (deck.length > 1 && deck[deck.length - 1].char === lastCharRef.current) {
+      ;[deck[0], deck[deck.length - 1]] = [deck[deck.length - 1], deck[0]]
+    }
+    deckRef.current = deck
+    setScore({ done: 0, correct: 0 })
+    nextQuestion(all)
+  }
+
+  function nextQuestion(all) {
+    const deck = deckRef.current
+    if (deck.length === 0) { setPhase('complete'); return }
+    const target = deck.pop()
+    lastCharRef.current = target.char
     const distractors = sample(all.map((e) => e.char), 3, target.char)
     const choices = shuffle([target.char, ...distractors])
     setQ({ target, choices })
@@ -89,78 +105,92 @@ export default function Quiz({ session, grade, mode, go }) {
   function finishWrite(correct) { record(correct); nextQuestion(entries) }
 
   if (err) return <div className="screen center"><div className="card"><p className="error">{err}</p><button onClick={() => go('home')}>もどる</button></div></div>
-  if (!q) return <div className="screen center">よみこみちゅう…</div>
+  if (!q && phase !== 'complete') return <div className="screen center">よみこみちゅう…</div>
 
-  const t = q.target
+  const t = q?.target
+  const total = entries ? entries.filter((e) => e.hasIllust).length : 0
 
   return (
     <div className="screen quiz">
       <div className="quiz-status">
         <span className="chip">{mode === 'choose' ? '✏️ えらぶ' : '🖌️ てがき'}</span>
-        <span className="chip">⭐ {score.correct}／{score.done}もん</span>
+        <span className="chip">⭐ {score.correct}／{total}もん</span>
         <button className="ghost sm" onClick={() => go('home')}>やめる</button>
       </div>
 
-      <div className="quiz-main">
-        <div className="quiz-visual">
-          <img className="illust" src={illustUrl(t.char)} alt={promptReading(t)} />
-          {phase === 'question'
-            ? <EmphWord word={t.word} reading={promptReading(t)} />
-            : <div className="answer-key sm">{t.char}</div>}
+      {/* ROUND COMPLETE */}
+      {phase === 'complete' ? (
+        <div className="quiz-main">
+          <div className="result">
+            <div className="big-emoji">🏆</div>
+            <p className="reading">ぜんぶ できた！</p>
+            <p className="center meaning">{score.correct}／{score.done}もん せいかい</p>
+            <button className="big pink" onClick={() => startRound(entries)}>もういちど あそぶ</button>
+            <button className="ghost" onClick={() => go('home')}>おわる</button>
+          </div>
         </div>
+      ) : (
+        <div className="quiz-main">
+          <div className="quiz-visual">
+            <img className="illust" src={illustUrl(t.char)} alt={promptReading(t)} />
+            {phase === 'question'
+              ? <EmphWord word={t.word} reading={promptReading(t)} />
+              : <div className="answer-key sm">{t.char}</div>}
+          </div>
 
-        <div className="quiz-action">
-          {/* CHOOSE — question */}
-          {mode === 'choose' && phase === 'question' && (
-            <>
-              <p className="hint">いろの ところの かんじは？</p>
-              <div className="choices">
-                {q.choices.map((c) => (
-                  <button key={c} className="choice" onClick={() => pick(c)}>{c}</button>
-                ))}
+          <div className={'quiz-action' + (mode === 'write' && phase === 'question' ? ' stretch' : '')}>
+            {/* CHOOSE — question */}
+            {mode === 'choose' && phase === 'question' && (
+              <>
+                <p className="hint">いろの ところの かんじは？</p>
+                <div className="choices">
+                  {q.choices.map((c) => (
+                    <button key={c} className="choice" onClick={() => pick(c)}>{c}</button>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* WRITE — question */}
+            {mode === 'write' && phase === 'question' && (
+              <>
+                <p className="hint">いろの ところの かんじを かいてみよう</p>
+                <div className="canvas-holder"><HandwritingCanvas strokesRef={strokesRef} onClearRef={clearRef} snapshotRef={snapshotRef} /></div>
+                <div className="row">
+                  <button className="ghost" onClick={() => clearRef.current && clearRef.current()}>けす</button>
+                  <button className="blue" onClick={checkWriting}>こたえあわせ</button>
+                </div>
+              </>
+            )}
+
+            {/* CHOOSE — result */}
+            {mode === 'choose' && phase === 'done' && (
+              <div className="result">
+                <div className="big-emoji">{result.correct ? '🎉' : '💪'}</div>
+                <p className="center reading">{t.yomi.join('・')}</p>
+                <p className="center meaning">{t.meaning}</p>
+                <button className="big pink" onClick={() => nextQuestion(entries)}>つぎ へ ▶</button>
               </div>
-            </>
-          )}
+            )}
 
-          {/* WRITE — question */}
-          {mode === 'write' && phase === 'question' && (
-            <>
-              <p className="hint">いろの ところの かんじを かいてみよう</p>
-              <div className="canvas-holder"><HandwritingCanvas strokesRef={strokesRef} onClearRef={clearRef} snapshotRef={snapshotRef} /></div>
-              <div className="row">
-                <button className="ghost" onClick={() => clearRef.current && clearRef.current()}>けす</button>
-                <button className="blue" onClick={checkWriting}>こたえあわせ</button>
+            {/* WRITE — reveal */}
+            {mode === 'write' && phase === 'reveal' && scoreRes && (
+              <div className="result">
+                <div className="big-emoji sm">{GRADE_LABEL[scoreRes.grade].emoji}</div>
+                <p className="center reading">{GRADE_LABEL[scoreRes.grade].text}</p>
+                <div className="compare">
+                  <div><p className="hint">かいた じ</p><div className="compare-box">{drawnImg && <img src={drawnImg} alt="かいた じ" />}</div></div>
+                  <div><p className="hint">おてほん</p><div className="compare-box answer-key">{t.char}</div></div>
+                </div>
+                <button className={'big ' + GRADE_LABEL[scoreRes.grade].cls} onClick={() => finishWrite(scoreRes.correct)}>つぎ へ ▶</button>
+                <button className="ghost sm" onClick={() => finishWrite(!scoreRes.correct)}>
+                  {scoreRes.correct ? 'う〜ん ちがったかも' : 'かけてた！ せいかいにする'}
+                </button>
               </div>
-            </>
-          )}
-
-          {/* CHOOSE — result */}
-          {mode === 'choose' && phase === 'done' && (
-            <div className="result">
-              <div className="big-emoji">{result.correct ? '🎉' : '💪'}</div>
-              <p className="center reading">{t.yomi.join('・')}</p>
-              <p className="center meaning">{t.meaning}</p>
-              <button className="big pink" onClick={() => nextQuestion(entries)}>つぎ へ ▶</button>
-            </div>
-          )}
-
-          {/* WRITE — reveal */}
-          {mode === 'write' && phase === 'reveal' && scoreRes && (
-            <div className="result">
-              <div className="big-emoji sm">{GRADE_LABEL[scoreRes.grade].emoji}</div>
-              <p className="center reading">{GRADE_LABEL[scoreRes.grade].text}</p>
-              <div className="compare">
-                <div><p className="hint">かいた じ</p><div className="compare-box">{drawnImg && <img src={drawnImg} alt="かいた じ" />}</div></div>
-                <div><p className="hint">おてほん</p><div className="compare-box answer-key">{t.char}</div></div>
-              </div>
-              <button className={'big ' + GRADE_LABEL[scoreRes.grade].cls} onClick={() => finishWrite(scoreRes.correct)}>つぎ へ ▶</button>
-              <button className="ghost sm" onClick={() => finishWrite(!scoreRes.correct)}>
-                {scoreRes.correct ? 'う〜ん ちがったかも' : 'かけてた！ せいかいにする'}
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

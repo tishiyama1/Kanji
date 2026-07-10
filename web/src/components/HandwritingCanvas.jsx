@@ -18,9 +18,13 @@ export default function HandwritingCanvas({ strokesRef, onClearRef, snapshotRef 
     const ctx = canvas.getContext('2d')
 
     function setup() {
-      const size = canvas.clientWidth
+      // largest square that fits the holder, so buttons below never clip
+      const holder = canvas.parentElement
+      const size = Math.floor(Math.min(holder.clientWidth, holder.clientHeight))
       if (!size || size === cssSize.current) return
       cssSize.current = size
+      canvas.style.width = size + 'px'
+      canvas.style.height = size + 'px'
       const dpr = window.devicePixelRatio || 1
       canvas.width = size * dpr
       canvas.height = size * dpr
@@ -34,7 +38,7 @@ export default function HandwritingCanvas({ strokesRef, onClearRef, snapshotRef 
     }
     setup()
     const ro = new ResizeObserver(setup)
-    ro.observe(canvas)
+    ro.observe(canvas.parentElement)
 
     if (strokesRef) strokesRef.current = strokes.current
 

@@ -1,5 +1,6 @@
-// On-screen hiragana (gojūon) keyboard for kids who can't type yet.
-const ROWS = [
+// Switch-style gojūon keyboard: vertical columns (あいうえお top→bottom),
+// columns ordered left→right from あ to わ, function keys on the right.
+const COLS = [
   ['あ', 'い', 'う', 'え', 'お'],
   ['か', 'き', 'く', 'け', 'こ'],
   ['さ', 'し', 'す', 'せ', 'そ'],
@@ -15,19 +16,13 @@ const ROWS = [
 export default function KanaKeyboard({ onChar, onSpecial }) {
   return (
     <div className="kb">
-      {ROWS.map((row, i) => (
-        <div className="kb-row" key={i}>
-          {row.map((ch) => (
-            <button key={ch} className="kb-key" onClick={() => onChar(ch)}>{ch}</button>
-          ))}
-        </div>
+      {COLS.flat().map((ch, i) => (
+        <button key={i} className="kb-key" onClick={() => onChar(ch)}>{ch}</button>
       ))}
-      <div className="kb-row">
-        <button className="kb-key" onClick={() => onSpecial('dakuten')}>゛</button>
-        <button className="kb-key" onClick={() => onSpecial('handakuten')}>゜</button>
-        <button className="kb-key" onClick={() => onChar('ー')}>ー</button>
-        <button className="kb-key wide" onClick={() => onSpecial('back')}>← けす</button>
-      </div>
+      <button className="kb-key fn" style={{ gridColumn: 11, gridRow: 1 }} onClick={() => onSpecial('dakuten')}>゛</button>
+      <button className="kb-key fn" style={{ gridColumn: 11, gridRow: 2 }} onClick={() => onSpecial('handakuten')}>゜</button>
+      <button className="kb-key fn" style={{ gridColumn: 11, gridRow: 3 }} onClick={() => onChar('ー')}>ー</button>
+      <button className="kb-key fn del" style={{ gridColumn: 11, gridRow: '4 / span 2' }} onClick={() => onSpecial('back')}>⌫</button>
     </div>
   )
 }

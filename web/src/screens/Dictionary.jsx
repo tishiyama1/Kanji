@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import * as api from '../api.js'
 import { loadGrade, illustUrl } from '../data.js'
 
@@ -37,7 +38,10 @@ export default function Dictionary({ session, grade, go }) {
 
       <button className="ghost" onClick={() => go('home')}>もどる</button>
 
-      {open && <KanjiPopup entry={open} progress={progress[open.char]} onClose={() => setOpen(null)} />}
+      {open && createPortal(
+        <KanjiPopup entry={open} progress={progress[open.char]} onClose={() => setOpen(null)} />,
+        document.body
+      )}
     </div>
   )
 }

@@ -47,14 +47,16 @@ export default function Login({ onLogin }) {
   return (
     <div className="screen login">
       <div className="login-top">
-        <h1>かんじ れんしゅう</h1>
-        <div className="row">
-          <button className={mode === 'login' ? 'pink' : 'ghost'} onClick={() => setMode('login')}>ログイン</button>
-          <button className={mode === 'signup' ? 'pink' : 'ghost'} onClick={() => setMode('signup')}>はじめて</button>
+        <div className="login-head">
+          <h1>🖍️ かんじ れんしゅう</h1>
+          <div className="mode-toggle">
+            <button className={'sm ' + (mode === 'login' ? 'pink' : 'ghost')} onClick={() => setMode('login')}>ログイン</button>
+            <button className={'sm ' + (mode === 'signup' ? 'pink' : 'ghost')} onClick={() => setMode('signup')}>はじめて</button>
+          </div>
         </div>
 
         <div className="login-fields">
-          <div className="field-col" onClick={() => setField('name')}>
+          <div className="field-col name" onClick={() => setField('name')}>
             <label>なまえ</label>
             <div className={'display' + (field === 'name' ? ' active' : '')}>
               {name || <span className="placeholder">おして いれてね</span>}
@@ -74,10 +76,12 @@ export default function Login({ onLogin }) {
               </select>
             </div>
           )}
+          <div className="field-col go">
+            <button className="green submit" onClick={submit}>{mode === 'signup' ? 'とうろく' : 'はじめる'}</button>
+          </div>
         </div>
 
         {error && <p className="error">{error}</p>}
-        <button className="big green" onClick={submit}>{mode === 'signup' ? 'とうろく する' : 'はじめる'}</button>
       </div>
 
       <div className="kb-holder">
