@@ -126,7 +126,8 @@ if (grades.length === 0) { console.error('usage: node build-strokes.mjs <grade..
 
 for (const g of grades) {
   const master = JSON.parse(readFileSync(join(ROOT, `web/public/data/grade-${g}.json`), 'utf8'))
-  const targets = master.kanji.filter((e) => e.hasIllust)
+  // every quizzable kanji (has an example word) needs reference strokes
+  const targets = master.kanji.filter((e) => e.word)
   const out = {}
   for (const e of targets) {
     process.stdout.write(`grade ${g}: ${e.char} … `)
