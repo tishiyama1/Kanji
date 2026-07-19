@@ -337,6 +337,19 @@ label { font-weight: 900; display: block; margin-bottom: 4px; font-size: 13px; c
 }
 .quiz-action.stretch .row { flex: 0 0 auto; width: 100%; }
 
+.word-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: min(20vh, 40vw);
+  padding: clamp(16px, 4vmin, 32px) clamp(20px, 6vmin, 44px);
+  background: #fff;
+  border: 3px solid var(--card-edge);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-soft);
+}
+.word-card .word { font-size: clamp(28px, 8vmin, 44px); }
+
 .illust {
   display: block;
   height: min(26vh, 46vw);

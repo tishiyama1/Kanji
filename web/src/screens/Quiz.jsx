@@ -60,6 +60,7 @@ export default function Quiz({ session, grade, mode, go }) {
   const [scoreRes, setScoreRes] = useState(null)
   const [drawnImg, setDrawnImg] = useState(null)
   const [score, setScore] = useState({ done: 0, correct: 0 })
+  const [roundTotal, setRoundTotal] = useState(0)
   const [err, setErr] = useState('')
   const clearRef = useRef(null)
   const strokesRef = useRef([])
@@ -76,15 +77,20 @@ export default function Quiz({ session, grade, mode, go }) {
     if (entries) startRound(entries)
   }, [entries])
 
+  const ROUND_SIZE = 10
+
   function startRound(all) {
-    const targets = all.filter((e) => e.hasIllust)
+    // quizzable = anything with an example word (illustration optional)
+    const targets = all.filter((e) => e.word)
     if (targets.length === 0) { setErr('この がくねんは いま じゅんびちゅうです'); return }
-    const deck = shuffle(targets)
+    // one round = up to ROUND_SIZE kanji, randomly drawn, no repeats within it
+    const deck = shuffle(targets).slice(0, ROUND_SIZE)
     // don't let the new round open with the kanji we just saw
     if (deck.length > 1 && deck[deck.length - 1].char === lastCharRef.current) {
       ;[deck[0], deck[deck.length - 1]] = [deck[deck.length - 1], deck[0]]
     }
     deckRef.current = deck
+    setRoundTotal(deck.length)
     setScore({ done: 0, correct: 0 })
     nextQuestion(all)
   }
@@ -126,7 +132,7 @@ export default function Quiz({ session, grade, mode, go }) {
   if (!q && phase !== 'complete') return <div className="screen center">よみこみちゅう…</div>
 
   const t = q?.target
-  const total = entries ? entries.filter((e) => e.hasIllust).length : 0
+  const total = roundTotal
 
   return (
     <div className="screen quiz">
@@ -150,10 +156,14 @@ export default function Quiz({ session, grade, mode, go }) {
       ) : (
         <div className="quiz-main">
           <div className="quiz-visual">
-            <img className="illust" src={illustUrl(t.char)} alt={promptReading(t)} />
-            {phase === 'question'
+            {t.hasIllust
+              ? <img className="illust" src={illustUrl(t.char)} alt={promptReading(t)} />
+              : phase === 'question'
+                ? <div className="word-card"><EmphWord word={t.word} reading={promptReading(t)} /></div>
+                : <div className="answer-key">{t.char}</div>}
+            {t.hasIllust && (phase === 'question'
               ? <EmphWord word={t.word} reading={promptReading(t)} />
-              : <div className="answer-key sm">{t.char}</div>}
+              : <div className="answer-key sm">{t.char}</div>)}
           </div>
 
           <div className={'quiz-action' + (mode === 'write' && phase === 'question' ? ' stretch' : '')}>
