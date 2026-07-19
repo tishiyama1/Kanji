@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 export default function Home({ session, go }) {
-  const [grade, setGrade] = useState(Math.min(session.grade || 1, 2))
+  const [grade, setGrade] = useState(Math.min(session.grade || 1, 3))
 
   return (
     <div className="screen scrollable home">
@@ -12,7 +12,7 @@ export default function Home({ session, go }) {
           <button
             key={g}
             className={'pill' + (g === grade ? ' on' : '')}
-            disabled={g > 2}
+            disabled={g > 3}
             onClick={() => setGrade(g)}
           >
             {g}ねん
