@@ -8,7 +8,7 @@ export default function Progress({ session, go }) {
   useEffect(() => {
     async function run() {
       const progress = await api.getProgress(session).catch(() => ({}))
-      const grades = [1, 2]
+      const grades = [1, 2, 3]
       const out = []
       for (const g of grades) {
         const entries = await loadGrade(g).catch(() => [])
