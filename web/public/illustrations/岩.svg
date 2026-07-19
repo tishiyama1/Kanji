@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="いわ">
+  <rect width="200" height="200" rx="24" fill="#FFF6E9"/>
+  <rect x="16" y="158" width="168" height="16" rx="8" fill="#E7D8BE"/>
+  <path d="M28 158 Q22 100 60 84 Q92 70 120 88 Q118 60 150 66 Q182 74 176 118 Q172 158 176 158 Z" fill="#9A9AA0"/>
+  <path d="M28 158 Q22 100 60 84 Q92 70 120 88 L96 158 Z" fill="#AEAEB4"/>
+  <g stroke="#7E7E85" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M60 100 L84 112 L74 130"/><path d="M132 100 L150 108"/>
+  </g>
+</svg>

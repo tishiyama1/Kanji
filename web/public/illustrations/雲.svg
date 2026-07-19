@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="くも">
+  <rect width="200" height="200" rx="24" fill="#CDEBF7"/>
+  <g fill="#FFFFFF">
+    <circle cx="70" cy="96" r="34"/><circle cx="112" cy="80" r="42"/><circle cx="146" cy="104" r="30"/>
+    <rect x="60" y="98" width="96" height="42" rx="21"/>
+  </g>
+  <g fill="#E4EEF3">
+    <circle cx="62" cy="150" r="20"/><circle cx="92" cy="146" r="24"/><circle cx="118" cy="152" r="18"/>
+    <rect x="58" y="150" width="66" height="20" rx="10"/>
+  </g>
+</svg>

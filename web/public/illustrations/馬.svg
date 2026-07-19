@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="うま">
+  <rect width="200" height="200" rx="24" fill="#FFF6E9"/>
+  <path d="M70 176 L70 120 Q60 96 84 78 L96 44 Q100 34 110 40 L120 66 Q150 74 150 116 L150 176 L130 176 L130 130 L90 130 L90 176 Z" fill="#B07B4F"/>
+  <path d="M96 44 Q86 40 82 30 Q94 34 100 44 Z" fill="#8a5a3c"/>
+  <path d="M110 40 Q120 34 126 26 Q124 40 116 48 Z" fill="#8a5a3c"/>
+  <path d="M118 66 Q140 60 152 44 Q146 74 122 82 Z" fill="#8a5a3c"/>
+  <circle cx="104" cy="66" r="5" fill="#3A3A3A"/>
+</svg>
