@@ -12,6 +12,18 @@
     { "char": "羽", "yomi": ["はね", "ウ"], "word": "とりのはね", "meaning": "とりや むしが とぶための ぶぶん。", "examples": ["とり の はね", "はばたく"], "strokes": 6, "parts": ["羽"], "hasIllust": true },
     { "char": "岩", "yomi": ["いわ", "ガン"], "word": "おおいわ", "meaning": "とても おおきくて かたい いし。", "examples": ["おおきな いわ", "いわやま"], "strokes": 8, "parts": ["山", "石"], "hasIllust": true },
     { "char": "池", "yomi": ["いけ", "チ"], "word": "ためいけ", "meaning": "みずが たまった ちいさな ところ。", "examples": ["いけ の さかな", "でんち"], "strokes": 6, "parts": ["氵", "也"], "hasIllust": true },
-    { "char": "米", "yomi": ["こめ", "マイ"], "word": "おこめ", "meaning": "ごはんに なる しろい つぶ。", "examples": ["おこめ を たく", "しんまい"], "strokes": 6, "parts": ["米"], "hasIllust": true }
+    { "char": "米", "yomi": ["こめ", "マイ"], "word": "おこめ", "meaning": "ごはんに なる しろい つぶ。", "examples": ["おこめ を たく", "しんまい"], "strokes": 6, "parts": ["米"], "hasIllust": true },
+    { "char": "体", "yomi": ["からだ", "タイ"], "word": "からだ", "meaning": "あたまから あしまでの ぜんぶ。", "examples": ["からだ を うごかす", "たいそう"], "strokes": 7, "parts": ["亻", "本"], "hasIllust": true },
+    { "char": "顔", "yomi": ["かお", "ガン"], "word": "まるいかお", "meaning": "め・はな・くちが ある あたまの まえ。", "examples": ["えがお", "せんがん"], "strokes": 18, "parts": ["彦", "頁"], "hasIllust": true },
+    { "char": "毛", "yomi": ["け", "モウ"], "word": "けいと", "meaning": "からだや どうぶつに はえる ほそい もの。", "examples": ["けいと", "まゆげ"], "strokes": 4, "parts": ["毛"], "hasIllust": true },
+    { "char": "心", "yomi": ["こころ", "シン"], "word": "やさしいこころ", "meaning": "きもちを かんじる ところ。", "examples": ["やさしい こころ", "あんしん"], "strokes": 4, "parts": ["心"], "hasIllust": true },
+    { "char": "父", "yomi": ["ちち", "フ"], "word": "ちちおや", "meaning": "おとうさんの こと。", "examples": ["ちちおや", "そふ"], "strokes": 4, "parts": ["父"], "hasIllust": true },
+    { "char": "母", "yomi": ["はは", "ボ"], "word": "ははおや", "meaning": "おかあさんの こと。", "examples": ["ははおや", "そぼ"], "strokes": 5, "parts": ["母"], "hasIllust": true },
+    { "char": "家", "yomi": ["いえ", "カ"], "word": "いえのなか", "meaning": "ひとが すむ たてもの。", "examples": ["いえ に かえる", "かぞく"], "strokes": 10, "parts": ["宀", "豕"], "hasIllust": true },
+    { "char": "船", "yomi": ["ふね", "セン"], "word": "おおきなふね", "meaning": "みずの うえを すすむ のりもの。", "examples": ["ふね に のる", "ふうせん"], "strokes": 11, "parts": ["舟", "口"], "hasIllust": true },
+    { "char": "電", "yomi": ["でん", "デン"], "word": "でんき", "meaning": "あかりや きかいを うごかす ちから。", "examples": ["でんき", "でんしゃ"], "strokes": 13, "parts": ["雨", "田"], "hasIllust": true },
+    { "char": "弓", "yomi": ["ゆみ", "キュウ"], "word": "ゆみや", "meaning": "やを とばす どうぐ。", "examples": ["ゆみや", "ゆみをひく"], "strokes": 3, "parts": ["弓"], "hasIllust": true },
+    { "char": "茶", "yomi": ["ちゃ", "サ"], "word": "おちゃ", "meaning": "はっぱから つくる のみもの。", "examples": ["おちゃ を のむ", "こうちゃ"], "strokes": 9, "parts": ["艹", "木"], "hasIllust": true },
+    { "char": "肉", "yomi": ["にく", "ニク"], "word": "おにく", "meaning": "たべものに する どうぶつの み。", "examples": ["おにく を たべる", "やきにく"], "strokes": 6, "parts": ["肉"], "hasIllust": true }
   ]
 }
