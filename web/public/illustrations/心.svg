@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="こころ">
+  <rect width="200" height="200" rx="24" fill="#FFF6E9"/>
+  <path d="M100 168 C40 124 34 84 56 62 C78 40 100 62 100 78 C100 62 122 40 144 62 C166 84 160 124 100 168 Z" fill="#FF8FB1" stroke="#E2648E" stroke-width="4"/>
+  <ellipse cx="76" cy="86" rx="14" ry="20" transform="rotate(-30 76 86)" fill="#FFC3D8"/>
+</svg>

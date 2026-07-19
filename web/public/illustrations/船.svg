@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="ふね">
+  <rect width="200" height="200" rx="24" fill="#CDEBF7"/>
+  <rect x="96" y="52" width="8" height="60" fill="#B07B4F"/>
+  <path d="M104 56 L150 96 L104 96 Z" fill="#FF8FB1"/>
+  <path d="M96 64 L60 96 L96 96 Z" fill="#FFFFFF"/>
+  <path d="M40 118 L160 118 L142 156 L58 156 Z" fill="#E5713F"/>
+  <rect x="40" y="112" width="120" height="12" rx="6" fill="#C85a31"/>
+  <path d="M0 158 Q40 150 80 158 Q120 166 160 158 Q180 153 200 158 L200 200 L0 200 Z" fill="#62C6EC"/>
+</svg>
