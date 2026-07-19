@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="うみ">
+  <rect width="200" height="200" rx="24" fill="#CDEBF7"/>
+  <circle cx="150" cy="50" r="20" fill="#FFD25A"/>
+  <path d="M0 118 Q40 104 80 118 Q120 132 160 118 Q180 111 200 118 L200 200 L0 200 Z" fill="#3BA3CF"/>
+  <path d="M0 132 Q40 120 80 132 Q120 144 160 132 Q180 126 200 132 L200 200 L0 200 Z" fill="#62C6EC"/>
+  <g stroke="#EAF7FC" stroke-width="4" fill="none" stroke-linecap="round">
+    <path d="M28 150 Q40 144 52 150"/><path d="M96 158 Q108 152 120 158"/><path d="M150 148 Q162 142 174 148"/>
+  </g>
+</svg>

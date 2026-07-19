@@ -1,9 +1,17 @@
 {
   "grade": 2,
   "kanji": [
-    { "char": "海", "yomi": ["うみ", "カイ"], "word": "うみべ", "meaning": "しおみずが ある とても おおきな みず。", "examples": ["うみ で およぐ", "かいすいよく"], "strokes": 9, "parts": ["氵", "毎"], "hasIllust": false },
-    { "char": "星", "yomi": ["ほし", "セイ"], "word": "ほしぞら", "meaning": "よぞらで ひかる ちいさな ひかり。", "examples": ["ほし が ひかる", "せいざ"], "strokes": 9, "parts": ["日", "生"], "hasIllust": false },
-    { "char": "魚", "yomi": ["さかな", "ギョ"], "word": "さかなつり", "meaning": "みずの なかを およぐ いきもの。", "examples": ["さかな を たべる", "きんぎょ"], "strokes": 11, "parts": ["魚"], "hasIllust": false },
-    { "char": "鳥", "yomi": ["とり", "チョウ"], "word": "ことり", "meaning": "そらを とぶ はねの ある いきもの。", "examples": ["とり が とぶ", "ことり"], "strokes": 11, "parts": ["鳥"], "hasIllust": false }
+    { "char": "海", "yomi": ["うみ", "カイ"], "word": "うみべ", "meaning": "しおみずが ある とても おおきな みず。", "examples": ["うみ で およぐ", "かいすいよく"], "strokes": 9, "parts": ["氵", "毎"], "hasIllust": true },
+    { "char": "魚", "yomi": ["さかな", "ギョ"], "word": "さかなつり", "meaning": "みずの なかを およぐ いきもの。", "examples": ["さかな を たべる", "きんぎょ"], "strokes": 11, "parts": ["魚"], "hasIllust": true },
+    { "char": "鳥", "yomi": ["とり", "チョウ"], "word": "ことり", "meaning": "そらを とぶ はねの ある いきもの。", "examples": ["とり が とぶ", "ことり"], "strokes": 11, "parts": ["鳥"], "hasIllust": true },
+    { "char": "星", "yomi": ["ほし", "セイ"], "word": "ほしぞら", "meaning": "よぞらで ひかる ちいさな ひかり。", "examples": ["ほし が ひかる", "せいざ"], "strokes": 9, "parts": ["日", "生"], "hasIllust": true },
+    { "char": "雲", "yomi": ["くも", "ウン"], "word": "くものうえ", "meaning": "そらに うかぶ しろい かたまり。", "examples": ["くも が ながれる", "にゅうどうぐも"], "strokes": 12, "parts": ["雨", "云"], "hasIllust": true },
+    { "char": "雪", "yomi": ["ゆき", "セツ"], "word": "ゆきだるま", "meaning": "そらから ふる しろくて つめたい もの。", "examples": ["ゆき が ふる", "おおゆき"], "strokes": 11, "parts": ["雨", "彐"], "hasIllust": true },
+    { "char": "馬", "yomi": ["うま", "バ"], "word": "こうま", "meaning": "はやく はしる おおきな どうぶつ。", "examples": ["うま に のる", "しろうま"], "strokes": 10, "parts": ["馬"], "hasIllust": true },
+    { "char": "牛", "yomi": ["うし", "ギュウ"], "word": "こうし", "meaning": "「モー」と なく おおきな どうぶつ。", "examples": ["うし の ちち", "ぎゅうにゅう"], "strokes": 4, "parts": ["牛"], "hasIllust": true },
+    { "char": "羽", "yomi": ["はね", "ウ"], "word": "とりのはね", "meaning": "とりや むしが とぶための ぶぶん。", "examples": ["とり の はね", "はばたく"], "strokes": 6, "parts": ["羽"], "hasIllust": true },
+    { "char": "岩", "yomi": ["いわ", "ガン"], "word": "おおいわ", "meaning": "とても おおきくて かたい いし。", "examples": ["おおきな いわ", "いわやま"], "strokes": 8, "parts": ["山", "石"], "hasIllust": true },
+    { "char": "池", "yomi": ["いけ", "チ"], "word": "ためいけ", "meaning": "みずが たまった ちいさな ところ。", "examples": ["いけ の さかな", "でんち"], "strokes": 6, "parts": ["氵", "也"], "hasIllust": true },
+    { "char": "米", "yomi": ["こめ", "マイ"], "word": "おこめ", "meaning": "ごはんに なる しろい つぶ。", "examples": ["おこめ を たく", "しんまい"], "strokes": 6, "parts": ["米"], "hasIllust": true }
   ]
 }
