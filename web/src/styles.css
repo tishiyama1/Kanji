@@ -429,6 +429,8 @@ label { font-weight: 900; display: block; margin-bottom: 4px; font-size: 13px; c
   gap: 10px;
   overflow-y: auto;
   overflow-x: hidden;
+  /* room so the candy buttons' 3D bottom edge/shadow isn't clipped */
+  padding: 4px 10px 16px;
 }
 /* write mode: fill the remaining height so canvas+buttons always fit */
 .quiz-action.stretch {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import * as api from '../api.js'
-import { loadGrade, loadStrokes, illustUrl, promptReading } from '../data.js'
+import { loadGrade, loadStrokes, illustUrl, promptReading, wordVariants, pickVariant } from '../data.js'
 import { scoreHandwriting, GRADE_LABEL } from '../scoring.js'
 import HandwritingCanvas from '../components/HandwritingCanvas.jsx'
 import Mascot from '../components/Mascot.jsx'
@@ -99,7 +99,7 @@ export default function Quiz({ session, grade, mode, go }) {
   }, [phase])
 
   function startRound(all) {
-    const targets = all.filter((e) => e.word)
+    const targets = all.filter((e) => wordVariants(e))
     if (targets.length === 0) { setErr('この がくねんは いま じゅんびちゅうです'); return }
     const deck = shuffle(targets).slice(0, ROUND_SIZE)
     if (deck.length > 1 && deck[deck.length - 1].char === lastCharRef.current) {
@@ -119,7 +119,8 @@ export default function Quiz({ session, grade, mode, go }) {
     lastCharRef.current = target.char
     const distractors = pickDistractors(all, target, 3)
     const choices = shuffle([target.char, ...distractors])
-    setQ({ target, choices })
+    const { word, read } = pickVariant(target) // vary the example word / reading
+    setQ({ target, choices, word, read })
     setResult(null)
     setScoreRes(null)
     setPhase('question')
@@ -208,10 +209,10 @@ export default function Quiz({ session, grade, mode, go }) {
             {t.hasIllust
               ? <img className="illust" src={illustUrl(t.char)} alt={promptReading(t)} />
               : phase === 'question'
-                ? <div className="word-card"><EmphWord word={t.word} reading={promptReading(t)} /></div>
+                ? <div className="word-card"><EmphWord word={q.word} reading={q.read} /></div>
                 : <div className="answer-key">{t.char}</div>}
             {t.hasIllust && (phase === 'question'
-              ? <EmphWord word={t.word} reading={promptReading(t)} />
+              ? <EmphWord word={q.word} reading={q.read} />
               : <div className="answer-key sm">{t.char}</div>)}
           </div>
 
