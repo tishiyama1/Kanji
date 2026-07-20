@@ -19,6 +19,21 @@ export function promptReading(entry) {
   return entry.yomi[0]
 }
 
+// Example-word variants for a kanji, as [text, reading] pairs. A kanji can
+// carry several (`words`) so different readings get practised; older data
+// with a single `word` falls back to one variant.
+export function wordVariants(entry) {
+  if (entry.words && entry.words.length) return entry.words
+  if (entry.word) return [[entry.word, entry.yomi[0]]]
+  return null
+}
+export function pickVariant(entry) {
+  const v = wordVariants(entry)
+  if (!v) return { word: null, read: promptReading(entry) }
+  const [word, read] = v[Math.floor(Math.random() * v.length)]
+  return { word, read }
+}
+
 // KanjiVG reference strokes (normalized 0..1), used by the handwriting scorer.
 const strokeCache = {}
 export async function loadStrokes(grade) {
