@@ -5,10 +5,12 @@ import Home from './screens/Home.jsx'
 import Quiz from './screens/Quiz.jsx'
 import Dictionary from './screens/Dictionary.jsx'
 import Progress from './screens/Progress.jsx'
+import { soundOn, setSoundOn, playTap } from './sound.js'
 
 export default function App() {
   const [session, setSession] = useState(api.currentSession())
   const [view, setView] = useState({ name: 'home' })
+  const [sound, setSound] = useState(soundOn())
 
   if (!session) {
     return (
@@ -20,13 +22,22 @@ export default function App() {
 
   const go = (name, params = {}) => setView({ name, ...params })
   const logout = () => { api.logout(); setSession(null) }
+  const toggleSound = () => {
+    const next = !sound
+    setSoundOn(next)
+    setSound(next)
+    if (next) playTap()
+  }
 
   return (
     <div className="app">
       <div className="topbar">
         <button className="ghost sm" onClick={() => go('home')}>🏠</button>
         <span className="name">{session.name} さん</span>
-        <button className="ghost sm" onClick={logout}>ばいばい</button>
+        <span className="topbar-right">
+          <button className="ghost sm" onClick={toggleSound} aria-label="おと">{sound ? '🔊' : '🔇'}</button>
+          <button className="ghost sm" onClick={logout}>ばいばい</button>
+        </span>
       </div>
 
       {view.name === 'home' && <Home session={session} go={go} />}
