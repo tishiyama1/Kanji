@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import * as api from '../api.js'
 import { loadGrade } from '../data.js'
+import Mascot from '../components/Mascot.jsx'
+import { computeStats, rankFor, nextRank, BADGES } from '../level.js'
 
 export default function Progress({ session, go }) {
   const [rows, setRows] = useState(null)
@@ -15,21 +17,48 @@ export default function Progress({ session, go }) {
         const learned = entries.filter((e) => progress[e.char] && progress[e.char].corrects > 0).length
         out.push({ grade: g, learned, total: entries.length })
       }
-      const totalAttempts = Object.values(progress).reduce((a, p) => a + p.attempts, 0)
-      const totalCorrect = Object.values(progress).reduce((a, p) => a + p.corrects, 0)
-      setRows({ grades: out, totalAttempts, totalCorrect })
+      setRows({ grades: out, stats: computeStats(progress) })
     }
     run()
-  }, [session.userId])
+  }, [session])
 
-  if (!rows) return <div className="card center">よみこみちゅう…</div>
+  if (!rows) return <div className="screen center">よみこみちゅう…</div>
+
+  const { stats } = rows
+  const rank = rankFor(stats.stars)
+  const next = nextRank(stats.stars)
 
   return (
     <div className="screen scrollable">
       <h1>⭐ せいせき</h1>
+
+      <div className="card level-card">
+        <Mascot pose="happy" size={84} className="bob" />
+        <div className="lc-body">
+          <p className="lc-rank">{rank.emoji} {rank.name}</p>
+          <p className="lc-stars">⭐ {stats.stars}こ あつめた</p>
+          {next && (
+            <>
+              <div className="bar"><span style={{ width: Math.min(100, (stats.stars / next.min) * 100) + '%' }} /></div>
+              <p className="hint">つぎの「{next.emoji} {next.name}」まで あと{next.min - stats.stars}こ</p>
+            </>
+          )}
+        </div>
+      </div>
+
       <div className="card">
-        <h2>{session.name} さん</h2>
-        <p>ぜんぶで {rows.totalCorrect}かい せいかい（{rows.totalAttempts}かい ちょうせん）</p>
+        <h2>🎖️ メダル</h2>
+        <div className="badge-grid">
+          {BADGES.map((b) => {
+            const got = b.test(stats)
+            return (
+              <div key={b.id} className={'medal' + (got ? ' got' : '')}>
+                <span className="medal-emoji">{got ? b.emoji : '？'}</span>
+                <span className="medal-name">{b.name}</span>
+              </div>
+            )
+          })}
+        </div>
       </div>
 
       {rows.grades.map((r) => {
